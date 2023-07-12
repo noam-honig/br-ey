@@ -6,6 +6,7 @@ import { Remult } from 'remult';
 import { InputAreaComponent } from '../common/input-area/input-area.component';
 import { Roles } from '../users/roles';
 import { isValidPhone, Lending } from './lending';
+import { isZoran } from '../home/home.component';
 
 @Component({
   selector: 'app-lendings',
@@ -46,6 +47,9 @@ export const lendingRowButtons = (remult: Remult) => [
         l.returnDate = null!;
       else l.returnDate = new Date();
       await l.save();
+      if (isZoran()){
+        l.sendPostMessage()
+      }
     }
   },
   {

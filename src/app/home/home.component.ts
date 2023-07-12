@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
       return;
     const l = this.remult.repo(Lending).create({ item });
     showLendDialog(l, this.remult, () => {
-      if (!window.document.title.includes("צורן"))
+      if (isZoran())
         this.zone.run(() =>
           l.sendFormInWhatsapp());
       item._.reload();
@@ -45,3 +45,7 @@ export class HomeComponent implements OnInit {
   };
 }
 
+
+export function isZoran() {
+  return !window.document.title.includes("צורן");
+}
