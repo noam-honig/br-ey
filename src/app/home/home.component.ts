@@ -1,4 +1,10 @@
-import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  NgZone,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { openDialog } from '@remult/angular';
 import { DataAreaSettings, RowButton } from '@remult/angular/interfaces';
 import { Fields, getValueList, Remult } from 'remult';
@@ -13,39 +19,42 @@ import { Roles } from '../users/roles';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(private remult: Remult, private zone: NgZone) {
-
-  }
-  buttons: RowButton<Item>[] = [{
-    name: 'השאלות פעילות'
-  }];
+  constructor(private remult: Remult, private zone: NgZone) {}
+  buttons: RowButton<Item>[] = [
+    {
+      name: 'השאלות פעילות',
+    },
+  ];
   isAdmin() {
     return this.remult.isAllowed(Roles.admin);
   }
   items: Item[] = [];
   async ngOnInit() {
-    this.items = await this.remult.repo(Item).find({ where: { quantity: { ">": 0 } } })
+    this.items = await this.remult
+      .repo(Item)
+      .find({ where: { quantity: { '>': 0 } } });
   }
   history(item: Item) {
-    openDialog(ItemLendingComponent, x => x.item = item);
+    openDialog(ItemLendingComponent, (x) => (x.item = item));
   }
   lend(item: Item) {
-    if (!this.isAdmin())
-      return;
+    if (!this.isAdmin()) return;
     const l = this.remult.repo(Lending).create({ item });
     showLendDialog(l, this.remult, () => {
-      if (isZoran())
-        this.zone.run(() =>
-          l.sendFormInWhatsapp());
+      if (isZoran()) this.zone.run(() => l.sendFormInWhatsapp());
       item._.reload();
     });
-  };
+  }
+  test() {
+    return isZoran();
+  }
 }
 
-
 export function isZoran() {
-  return !window.document.title.includes("צורן");
+  if (window.location.origin.includes('brzor')) return true;
+
+  return !window.document.title.includes('צורן');
 }
